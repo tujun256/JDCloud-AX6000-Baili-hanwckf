@@ -27,7 +27,7 @@
 #sed -i '/"mediatek"\/\*|\"mvebu"\/\*/{n; s/.*/\tcpu_freq="2.0GHz" ;;/}' package/emortal/autocore/files/generic/cpuinfo
 cp $GITHUB_WORKSPACE/JDCloud-AX6000-Baili/mt7986a-jdcloud-re-cp-03.dts $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
 cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
-sed -i '/jdcloud,re-cp-03)/ {n; /lan1 lan2 lan3 lan4/lan1 lan2 lan3 lan4 lan5/g' $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
+sed -i 's|/jdcloud,re-cp-03)/ {n; /lan1 lan2 lan3 lan4|lan1 lan2 lan3 lan4 lan5|g' "$GITHUB_WORKSPACE"/openwrt/target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 sed -i 's/MT7986_ePAeLNA_EEPROM_AX6000.bin/MT7986_iPAiLNA_EEPROM_AX6000.bin/g' $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/mt7986/base-files/lib/preinit/90_extract_caldata
 cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/mt7986/base-files/lib/preinit/90_extract_caldata
