@@ -309,13 +309,3 @@
 //&uart0 {
 //	status = "okay";
 //};
-
-&watchdog {
-	status = "okay";
-};
-
-&wbsys {
-	pinctrl-names = "default";
-	pinctrl-0 = <&wf_2g_5g_pins>;
-	status = "okay";
-};
