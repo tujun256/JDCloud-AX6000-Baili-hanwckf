@@ -306,9 +306,9 @@
 };
 
 
-&uart0 {
-	status = "okay";
-};
+//&uart0 {
+//	status = "okay";
+//};
 
 &watchdog {
 	status = "okay";
