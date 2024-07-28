@@ -92,7 +92,7 @@
 		compatible = "mediatek,eth-mac";
 		reg = <1>;
 		phy-mode = "2500base-x";
-		phandle = <0x18>;
+		phandle = <&phy7>;
 		//ext-phy-reg = <7>;
 		//ext-phy-reset-gpios = <&pio 19 0>;	
 		fixed-link {
@@ -106,7 +106,7 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		ethernet-phy@7 {
+		phy7: phy@7 {
 		compatible = "ethernet-phy-ieee802.3-c45";
 		reg = <0x07>;
 		reset-gpios = <0x14 0x06 0x01>;
@@ -116,7 +116,7 @@
 		realtek,aldps-enable;
 	};
 
-		ethernet-phy@5 {
+		phy5: ethernet-phy@5 {
 		compatible = "ethernet-phy-ieee802.3-c45";
 		reg = <0x05>;
 		reset-gpios = <0x14 0x30 0x01>;
@@ -165,7 +165,7 @@
 					reg = <5>;
 					label = "lan5";
 					phy-mode = "2500base-x";
-					phy-handle = <0x19>;
+					phy-handle = <&phy5>;
 
 					fixed-link {
 						speed = <2500>;
