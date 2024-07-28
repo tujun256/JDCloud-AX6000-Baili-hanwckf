@@ -92,7 +92,7 @@
 		compatible = "mediatek,eth-mac";
 		reg = <1>;
 		phy-mode = "2500base-x";
-		phandle = <&phy7>;
+		//phandle = <&phy7>;
 		//ext-phy-reg = <7>;
 		//ext-phy-reset-gpios = <&pio 19 0>;	
 		fixed-link {
