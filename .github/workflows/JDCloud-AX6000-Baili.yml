@@ -181,7 +181,7 @@ jobs:
         cp JDCloud-AX6000-Baili/mt7986a-gsw-jdcloud-re-cp-03.dts openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
         cd openwrt
         sed -i '/jdcloud,re-cp-03)/ {n; /lan1 lan2 lan3 lan4/ {s/lan1 lan2 lan3 lan4/eth0/; a\
-        \t\tucidef_add_switch "switch0" "1:lan" "2:lan" "3:lan" "4:lan" "6u@eth0"
+        \t\tucidef_add_switch "switch0" "1:lan" "2:lan" "3:lan" "4:lan" "5:lan" "6u@eth0"
         }}' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 
     - name: 使用luci-app-mtk无线配置
