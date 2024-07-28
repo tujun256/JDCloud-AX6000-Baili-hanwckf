@@ -113,7 +113,7 @@
 		reset-assert-us = <0x186a0>;
 		reset-deassert-us = <0x186a0>;
 		phy-mode = "2500base-x";
-		phandle = <0x18>;
+		realtek,aldps-enable;
 	};
 
 		ethernet-phy@5 {
@@ -123,6 +123,7 @@
 		reset-assert-us = <0x186a0>;
 		reset-deassert-us = <0x186a0>;
 		phy-mode = "2500base-x";
+		realtek,aldps-enable;
 		phandle = <0x19>;
 	};
  		
