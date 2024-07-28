@@ -106,7 +106,7 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		phy7: phy@7 {
+		phy7: ethernet-phy@7 {
 		compatible = "ethernet-phy-ieee802.3-c45";
 		reg = <0x07>;
 		reset-gpios = <0x14 0x06 0x01>;
@@ -124,7 +124,7 @@
 		reset-deassert-us = <0x186a0>;
 		phy-mode = "2500base-x";
 		realtek,aldps-enable;
-		phandle = <0x19>;
+		//phandle = <0x19>;
 	};
  		
 		switch@0 {
