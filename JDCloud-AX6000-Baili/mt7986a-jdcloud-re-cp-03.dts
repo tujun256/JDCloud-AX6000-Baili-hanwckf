@@ -101,6 +101,7 @@
 	gmac1: mac@1 {
 		compatible = "mediatek,eth-mac";
 		reg = <1>;
+    phandle = <0x18>;
 		phy-mode = "2500base-x";
 
 		ext-phy-reg = <6>;
@@ -116,6 +117,26 @@
 	mdio: mdio-bus {
 		#address-cells = <1>;
 		#size-cells = <0>;
+
+                ethernet-phy@7 {
+                compatible = "ethernet-phy-ieee802.3-c45";
+                reg = <0x07>;
+                reset-gpios = <0x14 0x06 0x01>;
+                reset-assert-us = <0x186a0>;
+                reset-deassert-us = <0x186a0>;
+                phy-mode = "2500base-x";
+                phandle = <0x18>;
+            };
+
+                ethernet-phy@5 {
+                compatible = "ethernet-phy-ieee802.3-c45";
+                reg = <0x05>;
+                reset-gpios = <0x14 0x30 0x01>;
+                reset-assert-us = <0x186a0>;
+                reset-deassert-us = <0x186a0>;
+                phy-mode = "2500base-x";
+                phandle = <0x19>;
+            };
 	};
 };
 
@@ -127,10 +148,10 @@
 };
 
 &mdio {
-	switch: switch@1f {
+	switch: switch@0 {
 		compatible = "mediatek,mt7531";
 		reg = <31>;
-		reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <20 5 0>;
 		interrupt-controller;
 		#interrupt-cells = <1>;
 		interrupt-parent = <&pio>;
@@ -265,6 +286,7 @@
     port@5 {
 		  reg = <5>;
 		  label = "lan5";
+      phandle = <0x19>;
 			phy-mode = "2500base-x";
 
 			fixed-link {
