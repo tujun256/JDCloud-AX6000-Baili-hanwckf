@@ -286,7 +286,6 @@
     port@5 {
 		  reg = <5>;
 		  label = "lan5";
-      phandle = <0x19>;
 			phy-mode = "2500base-x";
 
 			fixed-link {
