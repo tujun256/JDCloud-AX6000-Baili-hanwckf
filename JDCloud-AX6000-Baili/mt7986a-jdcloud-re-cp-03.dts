@@ -12,12 +12,12 @@
 	model = "JDCloud RE-CP-03";
 	compatible = "jdcloud,re-cp-03", "mediatek,mt7986a";
 
-	// aliases {
-	// 	led-boot = &red_led;
-	// 	led-failsafe = &red_led;
-	// 	led-running = &green_led;
-	// 	led-upgrade = &green_led;
-	// };
+	aliases {
+		led-boot = &red_led;
+		led-failsafe = &red_led;
+		led-running = &green_led;
+		led-upgrade = &green_led;
+	};
 
 	chosen {
 		bootargs = "console=ttyS0,115200n1 loglevel=8 \
@@ -29,40 +29,40 @@
 		reg = <0 0x40000000 0 0x40000000>;
 	};
 
-	// gpio-keys {
-	// 	compatible = "gpio-keys";
+	gpio-keys {
+		compatible = "gpio-keys";
 
-	// 	button-joylink {
-	// 		label = "joylink";
-	// 		linux,code = <BTN_0>;
-	// 		gpios = <&pio 10 GPIO_ACTIVE_LOW>;
-	// 	};
+		button-joylink {
+			label = "joylink";
+			linux,code = <BTN_0>;
+			gpios = <&pio 10 GPIO_ACTIVE_LOW>;
+		};
 
-	// 	button-reset {
-	// 		label = "reset";
-	// 		linux,code = <KEY_RESTART>;
-	// 		gpios = <&pio 9 GPIO_ACTIVE_LOW>;
-	// 	};
-	// };
+		button-reset {
+			label = "reset";
+			linux,code = <KEY_RESTART>;
+			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
+		};
+	};
 
-	// gpio-leds {
-	// 	compatible = "gpio-leds";
+	gpio-leds {
+		compatible = "gpio-leds";
 
-	// 	led-0 {
-	// 		label = "blue:status";
-	// 		gpios = <&pio 7 GPIO_ACTIVE_HIGH>;
-	// 	};
+		led-0 {
+			label = "blue:status";
+			gpios = <&pio 7 GPIO_ACTIVE_HIGH>;
+		};
 
-	// 	red_led: led-1 {
-	// 		label = "red:status";
-	// 		gpios = <&pio 11 GPIO_ACTIVE_HIGH>;
-	// 	};
+		red_led: led-1 {
+			label = "red:status";
+			gpios = <&pio 11 GPIO_ACTIVE_HIGH>;
+		};
 
-	// 	green_led: led-2 {
-	// 		label = "green:status";
-	// 		gpios = <&pio 12 GPIO_ACTIVE_LOW>;
-	// 	};
-	// };
+		green_led: led-2 {
+			label = "green:status";
+			gpios = <&pio 12 GPIO_ACTIVE_LOW>;
+		};
+	};
 
 	reg_1p8v: regulator-1p8v {
 		compatible = "regulator-fixed";
@@ -103,8 +103,8 @@
 		reg = <1>;
 		phy-mode = "2500base-x";
 
-		// ext-phy-reg = <6>;
-		// ext-phy-reset-gpios = <&pio 6 0>;
+		ext-phy-reg = <6>;
+		ext-phy-reset-gpios = <&pio 6 0>;
 
 		fixed-link {
 			speed = <2500>;
@@ -116,26 +116,6 @@
 	mdio: mdio-bus {
 		#address-cells = <1>;
 		#size-cells = <0>;
-
-		ethernet-phy@7 {
-		compatible = "ethernet-phy-ieee802.3-c45";
-		reg = <0x07>;
-		reset-gpios = <0x14 0x06 0x01>;
-		reset-assert-us = <0x186a0>;
-		reset-deassert-us = <0x186a0>;
-		phy-mode = "2500base-x";
-		phandle = <0x18>;
-	};
-
-		ethernet-phy@5 {
-		compatible = "ethernet-phy-ieee802.3-c45";
-		reg = <0x05>;
-		reset-gpios = <0x14 0x30 0x01>;
-		reset-assert-us = <0x186a0>;
-		reset-deassert-us = <0x186a0>;
-		phy-mode = "2500base-x";
-		phandle = <0x19>;
-	};
 	};
 };
 
@@ -147,14 +127,14 @@
 };
 
 &mdio {
-	switch: switch@0 {
+	switch: switch@1f {
 		compatible = "mediatek,mt7531";
 		reg = <31>;
 		reset-gpios = <0x14 0x05 0x00>;
 		interrupt-controller;
 		#interrupt-cells = <1>;
-		// interrupt-parent = <&pio>;
-		// interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-parent = <&pio>;
+		interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
 	};
 };
 
@@ -276,18 +256,11 @@
 		port@4 {
 			reg = <4>;
 			label = "lan4";
+		};
 
 		port@5 {
 			reg = <5>;
 			label = "lan5";
-			phy-mode = "2500base-x";
-			phy-handle = <0x19>;
-
-			fixed-link {
-				speed = <2500>;
-				full-duplex;
-				pause;
-			};
 		};
 
 		port@6 {
@@ -305,7 +278,16 @@
 	};
 };
 
+&uart0 {
+	status = "okay";
+};
 
-//&uart0 {
-//	status = "okay";
-//};
+&watchdog {
+	status = "okay";
+};
+
+&wbsys {
+	pinctrl-names = "default";
+	pinctrl-0 = <&wf_2g_5g_pins>;
+	status = "okay";
+};
