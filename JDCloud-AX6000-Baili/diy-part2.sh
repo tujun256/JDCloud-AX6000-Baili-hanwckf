@@ -31,7 +31,7 @@ cp $GITHUB_WORKSPACE/JDCloud-AX6000-Baili/mt7986a-jdcloud-re-cp-03.dts $GITHUB_W
 
 cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
 
-sed -i 's|/jdcloud,re-cp-03)/ {n; /\(lan1 lan2 lan3 lan4\)|\1 lan5|g' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
+sed -i 's|/jdcloud,re-cp-03)/ {n; /\(lan1 lan2 lan3 lan4\)|\1 lan5 lan6|g' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 
 cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 
