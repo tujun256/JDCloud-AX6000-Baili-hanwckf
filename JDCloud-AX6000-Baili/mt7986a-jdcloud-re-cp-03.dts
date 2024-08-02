@@ -90,20 +90,21 @@
 		compatible = "mediatek,eth-mac";
 		reg = <0>;
 		phy-mode = "2500base-x";
-
+		ext-phy-reg = <5>;
+		ext-phy-reset-gpios = <&pio 48 0>;
 		fixed-link {
 			speed = <2500>;
 			full-duplex;
 			pause;
-		};
+		};	
 	};
 
 	gmac1: mac@1 {
 		compatible = "mediatek,eth-mac";
-		reg = <1>;
+		reg = <7>;
 		phy-mode = "2500base-x";
 
-		ext-phy-reg = <6>;
+		ext-phy-reg = <7>;
 		ext-phy-reset-gpios = <&pio 6 0>;
 
 		fixed-link {
@@ -256,6 +257,11 @@
 		port@4 {
 			reg = <4>;
 			label = "lan4";
+		};
+
+		port@5 {
+			reg = <5>;
+			label = "lan5";
 		};
 
 		port@6 {
