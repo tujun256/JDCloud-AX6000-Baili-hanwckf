@@ -10,7 +10,7 @@
 
 	chosen {
 		bootargs = "console=ttyS0,115200n1 loglevel=8  \
-				earlycon=uart8250,mmio32,0x11002000 \
+				earlycon=uart8250,mmio32,0x11002000 debug\
 				root=PARTLABEL=rootfs rootwait";
 	};
 	
@@ -95,15 +95,19 @@
         phy5: ethernet-phy@5 {
             compatible = "ethernet-phy-ieee802.3-c45";
             reg = <5>;
-            reset-gpios = <&pio 48 0>;
+            reset-gpios = <&pio 48 1>;
+            reset-assert-us = <10000>;
+            reset-deassert-us = <10000>;
         };
 
         phy7: ethernet-phy@7 {
             compatible = "ethernet-phy-ieee802.3-c45";
             reg = <7>;
-            reset-gpios = <&pio 6 0>;
+            reset-gpios = <&pio 6 1>;
+            reset-assert-us = <10000>;
+            reset-deassert-us = <10000>;
         };
- 		
+
         switch@1f {
             compatible = "mediatek,mt7531";
             reg = <31>;
