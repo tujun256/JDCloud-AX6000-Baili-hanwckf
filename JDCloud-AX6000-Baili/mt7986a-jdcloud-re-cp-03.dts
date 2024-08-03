@@ -143,21 +143,7 @@
 		compatible = "mediatek,eth-mac";
 		reg = <0>;
 		phy-mode = "2500base-x";
-		ext-phy-reg = <1>;
-		ext-phy-reset-gpios = <&pio 10 0>;
-		fixed-link {
-			speed = <2500>;
-			full-duplex;
-			pause;
-		};	
-	};
 
-	gmac1: mac@1 {
-		compatible = "mediatek,eth-mac";
-		reg = <1>;
-		phy-mode = "2500base-x";
-		ext-phy-reg = <7>;
-		ext-phy-reset-gpios = <&pio 19 0>;	
 		fixed-link {
 			speed = <2500>;
 			full-duplex;
@@ -165,14 +151,47 @@
 		};
 	};
 
+	gmac1: mac@1 {
+		compatible = "mediatek,eth-mac";
+		reg = <1>;
+		phy-mode = "2500base-x";
+		phy-handle = <&phy7>;
+	};
+
 	mdio: mdio-bus {
 		#address-cells = <1>;
 		#size-cells = <0>;
- 		
-		switch@0 {
+
+		phy7: ethernet-phy@7 {
+			compatible = "ethernet-phy-ieee802.3-c45";
+			reg = <7>;
+			reset-assert-us = <100000>;
+			reset-deassert-us = <100000>;
+			reset-gpios = <&pio 6 GPIO_ACTIVE_LOW>;
+			interrupt-parent = <&pio>;
+			//interrupts = <46 IRQ_TYPE_LEVEL_LOW>;
+			realtek,aldps-enable;
+		};
+
+		phy5: ethernet-phy@5 {
+			compatible = "ethernet-phy-ieee802.3-c45";
+			reg = <5>;
+			reset-assert-us = <100000>;
+			reset-deassert-us = <100000>;
+			reset-gpios = <&pio 48 GPIO_ACTIVE_LOW>;
+			interrupt-parent = <&pio>;
+			//interrupts = <47 IRQ_TYPE_LEVEL_LOW>;
+			realtek,aldps-enable;
+		};
+
+		switch: switch@1f {
 			compatible = "mediatek,mt7531";
 			reg = <31>;
-			reset-gpios = <&pio 5 0>;
+			reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
+			interrupt-controller;
+			#interrupt-cells = <1>;
+			interrupt-parent = <&pio>;
+			interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
 
 			ports {
 				#address-cells = <1>;
@@ -180,40 +199,38 @@
 
 				port@0 {
 					reg = <0>;
-					label = "lan1";
+					label = "lan0";
 				};
 
 				port@1 {
 					reg = <1>;
-					label = "lan2";
+					label = "lan1";
 				};
 
 				port@2 {
 					reg = <2>;
-					label = "lan3";
+					label = "lan2";
 				};
 
 				port@3 {
 					reg = <3>;
-					label = "lan4";
+					label = "lan3";
 				};
 
+				port@4 {
+					reg = <4>;
+					label = "lan4";
+				};
 
 				port@5 {
 					reg = <5>;
 					label = "lan5";
+					phy-handle = <&phy5>;
 					phy-mode = "2500base-x";
-
-					fixed-link {
-						speed = <2500>;
-						full-duplex;
-						pause;
-					};
 				};
 
 				port@6 {
 					reg = <6>;
-					label = "cpu";
 					ethernet = <&gmac0>;
 					phy-mode = "2500base-x";
 
