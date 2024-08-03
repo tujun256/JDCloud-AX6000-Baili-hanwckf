@@ -52,18 +52,6 @@
 	status = "okay";
 };
 
-&uart1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&uart1_pins>;
-	status = "okay";
-};
-
-&uart2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&uart2_pins>;
-	status = "okay";
-};
-
 &i2c0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c_pins>;
@@ -84,95 +72,96 @@
 };
 
 &eth {
-	status = "okay";
+    status = "okay";
 
-	gmac0: mac@0 {
-		compatible = "mediatek,eth-mac";
-		reg = <0>;
-		phy-mode = "2500base-x";
-		ext-phy-reg = <1>;
-		ext-phy-reset-gpios = <&pio 48 0>;
-		fixed-link {
-			speed = <2500>;
-			full-duplex;
-			pause;
-		};	
-	};
+    gmac0: mac@0 {
+        compatible = "mediatek,eth-mac";
+        reg = <0>;
+        phy-mode = "2500base-x";
+        ext-phy-reg = <5>;  // 修改为 5，因为 LAN5 使用的是 MDIO 地址 5
+        ext-phy-reset-gpios = <&pio 48 0>;
+        phy-handle = <&phy5>;  // 添加 phy-handle
+    };
 
-	gmac1: mac@1 {
-		compatible = "mediatek,eth-mac";
-		reg = <1>;
-		phy-mode = "2500base-x";
-		ext-phy-reg = <7>;
-		ext-phy-reset-gpios = <&pio 6 0>;	
-		fixed-link {
-			speed = <2500>;
-			full-duplex;
-			pause;
-		};
-	};
+    gmac1: mac@1 {
+        compatible = "mediatek,eth-mac";
+        reg = <1>;
+        phy-mode = "2500base-x";
+        ext-phy-reg = <7>;
+        ext-phy-reset-gpios = <&pio 6 0>;
+        phy-handle = <&phy7>;  // 添加 phy-handle
+    };
 
-	mdio: mdio-bus {
-		#address-cells = <1>;
-		#size-cells = <0>;
+    mdio: mdio-bus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        phy5: ethernet-phy@5 {
+            reg = <5>;
+            compatible = "ethernet-phy-ieee802.3-c45";
+        };
+
+        phy7: ethernet-phy@7 {
+            reg = <7>;
+            compatible = "ethernet-phy-ieee802.3-c45";
+        };
  		
-		switch@0 {
-			compatible = "mediatek,mt7531";
-			reg = <31>;
-			reset-gpios = <&pio 5 0>;
+        switch@1f {
+            compatible = "mediatek,mt7531";
+            reg = <31>;
+            reset-gpios = <&pio 5 0>;
 
-			ports {
-				#address-cells = <1>;
-				#size-cells = <0>;
+            ports {
+                #address-cells = <1>;
+                #size-cells = <0>;
 
-				port@0 {
-					reg = <0>;
-					label = "lan1";
-				};
+                port@0 {
+                    reg = <0>;
+                    label = "lan0";
+                };
 
-				port@1 {
-					reg = <1>;
-					label = "lan2";
-				};
+                port@1 {
+                    reg = <1>;
+                    label = "lan1";
+                };
 
-				port@2 {
-					reg = <2>;
-					label = "lan3";
-				};
+                port@2 {
+                    reg = <2>;
+                    label = "lan2";
+                };
 
-				port@3 {
-					reg = <3>;
-					label = "lan4";
-				};
+                port@3 {
+                    reg = <3>;
+                    label = "lan3";
+                };
 
+                port@4 {
+                    reg = <4>;
+                    label = "lan4";
+                };
 
-				port@5 {
-					reg = <5>;
-					label = "lan5";
-					phy-mode = "2500base-x";
+                port@5 {
+                    reg = <5>;
+                    label = "lan5";
+                    phy-mode = "2500base-x";
+                    phy-handle = <&phy5>;  // 添加 phy-handle
+                };
 
-					fixed-link {
-						speed = <2500>;
-						full-duplex;
-						pause;
-					};
-				};
+                port@6 {
+                    reg = <6>;
+                    label = "cpu";
+                    ethernet = <&gmac0>;
+                    phy-mode = "2500base-x";
 
-				port@6 {
-					reg = <6>;
-					label = "cpu";
-					ethernet = <&gmac0>;
-					phy-mode = "2500base-x";
-
-					fixed-link {
-						speed = <2500>;
-						full-duplex;
-						pause;
-					};
-				};
-			};
-		};
-	};
+                    fixed-link {
+                        speed = <2500>;
+                        full-duplex;
+                        pause;
+                    };
+                };
+            };
+        };
+    };
 };
 
 &xhci {
