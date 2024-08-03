@@ -78,18 +78,14 @@
         compatible = "mediatek,eth-mac";
         reg = <0>;
         phy-mode = "2500base-x";
-        ext-phy-reg = <5>;  // 修改为 5，因为 LAN5 使用的是 MDIO 地址 5
-        ext-phy-reset-gpios = <&pio 48 0>;
-        phy-handle = <&phy5>;  // 添加 phy-handle
+        phy-handle = <&phy5>;
     };
 
     gmac1: mac@1 {
         compatible = "mediatek,eth-mac";
         reg = <1>;
         phy-mode = "2500base-x";
-        ext-phy-reg = <7>;
-        ext-phy-reset-gpios = <&pio 6 0>;
-        phy-handle = <&phy7>;  // 添加 phy-handle
+        phy-handle = <&phy7>;
     };
 
     mdio: mdio-bus {
@@ -97,13 +93,15 @@
         #size-cells = <0>;
 
         phy5: ethernet-phy@5 {
-            reg = <5>;
             compatible = "ethernet-phy-ieee802.3-c45";
+            reg = <5>;
+            reset-gpios = <&pio 48 0>;
         };
 
         phy7: ethernet-phy@7 {
-            reg = <7>;
             compatible = "ethernet-phy-ieee802.3-c45";
+            reg = <7>;
+            reset-gpios = <&pio 6 0>;
         };
  		
         switch@1f {
@@ -144,7 +142,7 @@
                     reg = <5>;
                     label = "lan5";
                     phy-mode = "2500base-x";
-                    phy-handle = <&phy5>;  // 添加 phy-handle
+                    phy-handle = <&phy5>;
                 };
 
                 port@6 {
