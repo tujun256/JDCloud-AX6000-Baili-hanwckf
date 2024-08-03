@@ -14,13 +14,6 @@
 				root=PARTLABEL=rootfs rootwait";
 	};
 	
-	aliases {
-		led-boot = &led_status_white;
- 		led-failsafe = &led_status_white;
- 		led-running = &led_status_blue;
- 		led-upgrade = &led_status_blue;
-	};
-
 	memory {
 		reg = <0 0x40000000 0 0x10000000>;
 	};
