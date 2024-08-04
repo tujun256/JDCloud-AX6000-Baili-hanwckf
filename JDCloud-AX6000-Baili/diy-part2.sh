@@ -1,15 +1,5 @@
 #!/bin/bash
 #
-# Copyright (c) 2019-2020 P3TERX <https://p3terx.com>
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
-# https://github.com/P3TERX/Actions-OpenWrt
-# File name: diy-part2.sh
-# Description: OpenWrt DIY script part 2 (After Update feeds)
-#
-
 # Modify default IP
 #sed -i 's/192.168.1.1/192.168.50.5/g' package/base-files/files/bin/config_generate
 ##-----------------Del duplicate packages------------------
@@ -25,18 +15,23 @@
 #sed -i '/myddns_ipv4/,$d' feeds/packages/net/ddns-scripts/files/etc/config/ddns
 ##-----------------Manually set CPU frequency for MT7986A-----------------
 #sed -i '/"mediatek"\/\*|\"mvebu"\/\*/{n; s/.*/\tcpu_freq="2.0GHz" ;;/}' package/emortal/autocore/files/generic/cpuinfo
-cd $GITHUB_WORKSPACE/openwrt/
-pwd
-cp $GITHUB_WORKSPACE/JDCloud-AX6000-Baili/mt7986a-jdcloud-re-cp-03.dts $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
-#cp $GITHUB_WORKSPACE/JDCloud-AX6000-Baili/mt7986a-glinet-gl-mt6000.dts $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
-#cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
-#cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
+
 #sed -i 's|/jdcloud,re-cp-03)/ {n; /\(lan1 lan2 lan3 lan4\)|\1 lan5|g' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 
+#sed -i '/jdcloud,re-cp-03)/ {n; s/lan1 lan2 lan3 lan4/lan0 lan1 lan2 lan3 lan4 lan5/}' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
+
+
+cd ${GITHUB_WORKSPACE}/openwrt
+pwd
+cd ${GITHUB_WORKSPACE}/immortalwrt-master/mt7986a-jdcloud-re-cp-03.dts ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
+cp ${GITHUB_WORKSPACE}/immortalwrt-master/mt7986a-glinet-gl-mt6000.dts ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
+
+cat ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
+cat ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
+
 sed -i '/jdcloud,re-cp-03)/ {n; s/lan1 lan2 lan3 lan4/lan0 lan1 lan2 lan3 lan4 lan5/}' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
+cat ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 
-cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
+sed -i 's/MT7986_ePAeLNA_EEPROM_AX6000.bin/MT7986_iPAiLNA_EEPROM_AX6000.bin/g' ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/mt7986/base-files/lib/preinit/90_extract_caldata
+cat ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/mt7986/base-files/lib/preinit/90_extract_caldata
 
-sed -i 's/MT7986_ePAeLNA_EEPROM_AX6000.bin/MT7986_iPAiLNA_EEPROM_AX6000.bin/g' $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/mt7986/base-files/lib/preinit/90_extract_caldata
-
-cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/mt7986/base-files/lib/preinit/90_extract_caldata
