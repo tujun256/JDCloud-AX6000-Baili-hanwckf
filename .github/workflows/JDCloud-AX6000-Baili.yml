@@ -130,6 +130,9 @@ jobs:
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
+        pwd
+        cp $GITHUB_WORKSPACE/JDCloud-AX6000-Baili/mt7986a-glinet-gl-mt6000.dts target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
+        cat target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
         
     - name: 更新 & 安装 feeds
       run: |
