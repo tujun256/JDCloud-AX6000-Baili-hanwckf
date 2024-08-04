@@ -28,9 +28,9 @@
 cd $GITHUB_WORKSPACE/openwrt/
 pwd
 cp $GITHUB_WORKSPACE/JDCloud-AX6000-Baili/mt7986a-jdcloud-re-cp-03.dts $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
-cp $GITHUB_WORKSPACE/JDCloud-AX6000-Baili/mt7986a-glinet-gl-mt6000.dts $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
-cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
-cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
+#cp $GITHUB_WORKSPACE/JDCloud-AX6000-Baili/mt7986a-glinet-gl-mt6000.dts $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
+#cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
+#cat $GITHUB_WORKSPACE/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
 #sed -i 's|/jdcloud,re-cp-03)/ {n; /\(lan1 lan2 lan3 lan4\)|\1 lan5|g' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 
 sed -i '/jdcloud,re-cp-03)/ {n; s/lan1 lan2 lan3 lan4/lan0 lan1 lan2 lan3 lan4 lan5/}' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
