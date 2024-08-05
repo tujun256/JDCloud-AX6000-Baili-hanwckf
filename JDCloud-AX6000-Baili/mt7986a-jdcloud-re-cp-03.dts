@@ -5,11 +5,11 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/leds/common.h>
 / {
-	model = "GL.iNet GL-MT6000";
- 	compatible = "glinet,gl-mt6000","mediatek,mt7986a-emmc-rfb";
+	model = "JDCloud RE-CP-03";
+	compatible = "jdcloud,re-cp-03", "mediatek,mt7986a";
 	chosen {
 		bootargs = "console=ttyS0,115200n1 loglevel=8  \
-				earlycon=uart8250,mmio32,0x11002000 \
+				earlycon=uart8250,mmio32,0x11002000 debug \
 				root=PARTLABEL=rootfs rootwait";
 	};
 	
