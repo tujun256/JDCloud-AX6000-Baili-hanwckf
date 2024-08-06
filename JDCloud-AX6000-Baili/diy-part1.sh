@@ -19,3 +19,6 @@
 #git clone https://github.com/messense/aliyundrive-webdav package/messense
 #git clone https://github.com/gdy666/luci-app-lucky package/lucky
 #git clone https://github.com/destan19/OpenAppFilter package/OpenAppFilter
+cd openwrt
+
+echo "src-git mtk_openwrt_feed https://git01.mediatek.com/openwrt/feeds/mtk-openwrt-feeds" >> feeds.conf.default
