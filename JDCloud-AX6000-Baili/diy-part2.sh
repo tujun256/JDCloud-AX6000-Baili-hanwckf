@@ -3,9 +3,13 @@
 #sed -i 's|/jdcloud,re-cp-03)/ {n; /\(lan1 lan2 lan3 lan4\)|\1 lan5|g' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 
 #sed -i '/jdcloud,re-cp-03)/ {n; s/lan1 lan2 lan3 lan4/lan0 lan1 lan2 lan3 lan4 lan5/}' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
-
-
 cd ${GITHUB_WORKSPACE}/openwrt
+
+cp -af ./feeds/mtk_openwrt_feed/21.02/files/* .
+cp -af ./feeds/mtk_openwrt_feed/tools .
+for file in $(find ./feeds/mtk_openwrt_feed/21.02/patches-base -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
+for file in $(find ./feeds/mtk_openwrt_feed/21.02/patches-feeds -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
+
 pwd
 cp ${GITHUB_WORKSPACE}/JDCloud-AX6000-Baili/mt7986a-jdcloud-re-cp-03.dts ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
 
