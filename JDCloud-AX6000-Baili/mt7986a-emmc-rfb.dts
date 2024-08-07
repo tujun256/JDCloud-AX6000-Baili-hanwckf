@@ -99,51 +99,46 @@
 
 &eth {
     compatible = "mediatek,mt7986-eth";
-	// reg = <0x15100000 0x80000>;
-	// interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
-	// clocks = <&topckgen CK_TOP_ETH_SEL>,
-	// 			<&topckgen CK_TOP_F_ETH_50M_SEL>,
-	// 			<&ethsys CK_ETH_FE_EN>,
-	// 			<&ethsys CK_ETH_GP2_EN>,
-	// 			<&ethsys CK_ETH_GP1_EN>,
-	// 			<&ethsys CK_ETH_WOCPU1_EN>,
-	// 			<&ethsys CK_ETH_WOCPU0_EN>,
-	// 			<&sgmiisys0 CK_SGM0_TX_EN>,
-	// 			<&sgmiisys0 CK_SGM0_RX_EN>,
-	// 			<&sgmiisys1 CK_SGM1_TX_EN>,
-	// 			<&sgmiisys1 CK_SGM1_RX_EN>;
-	// clock-names = "eth", "eth_fe", "eth_gp2", "eth_gp1",
-	// 				"eth_wocpu1", "eth_wocpu0",
-	// 				"sgmii_tx250m", "sgmii_rx250m",
-	// 				"sgmii2_tx250m", "sgmii2_rx250m";
-	// assigned-clocks = <&topckgen CK_TOP_NETSYS_SEL>,
-	// 					<&topckgen CK_TOP_NETSYS_500M_SEL>;
-	// assigned-clock-parents = <&topckgen CK_TOP_CB_NET2_800M>,
-	// 							<&topckgen CK_TOP_CB_NET2_500M>;
-	// mediatek,ethsys = <&ethsys>;
-	// mediatek,sgmiisys = <&sgmiisys0>, <&sgmiisys1>;
-	// #reset-cells = <1>;
-	// #address-cells = <1>;
-	// #size-cells = <0>;
+    reg = <0x15100000 0x80000>;
+    interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
+                 <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
+                 <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
+                 <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
+                 <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
+                 <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
+                 <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
+                 <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
+    clocks = <&topckgen CK_TOP_ETH_SEL>,
+             <&topckgen CK_TOP_F_ETH_50M_SEL>,
+             <&ethsys CK_ETH_FE_EN>,
+             <&ethsys CK_ETH_GP2_EN>,
+             <&ethsys CK_ETH_GP1_EN>,
+             <&ethsys CK_ETH_WOCPU1_EN>,
+             <&ethsys CK_ETH_WOCPU0_EN>,
+             <&sgmiisys0 CK_SGM0_TX_EN>,
+             <&sgmiisys0 CK_SGM0_RX_EN>,
+             <&sgmiisys1 CK_SGM1_TX_EN>,
+             <&sgmiisys1 CK_SGM1_RX_EN>;
+    clock-names = "eth", "eth_fe", "eth_gp2", "eth_gp1",
+                  "eth_wocpu1", "eth_wocpu0",
+                  "sgmii_tx250m", "sgmii_rx250m",
+                  "sgmii2_tx250m", "sgmii2_rx250m";
+    assigned-clocks = <&topckgen CK_TOP_NETSYS_SEL>,
+                      <&topckgen CK_TOP_NETSYS_500M_SEL>;
+    assigned-clock-parents = <&topckgen CK_TOP_CB_NET2_800M>,
+                             <&topckgen CK_TOP_CB_NET2_500M>;
+    mediatek,ethsys = <&ethsys>;
+    mediatek,sgmiisys = <&sgmiisys0>, <&sgmiisys1>;
+    #reset-cells = <1>;
+    #address-cells = <1>;
+    #size-cells = <0>;
     status = "okay";
 
     gmac0: mac@0 {
         compatible = "mediatek,eth-mac";
         reg = <0>;
         phy-mode = "2500base-x";
-
-        fixed-link {
-            speed = <2500>;
-            full-duplex;
-            pause;
-        };
+        phy-handle = <&switch0>;
     };
 
     gmac1: mac@1 {
@@ -163,10 +158,9 @@
             reset-gpios = <&pio 19 1>;
             reset-assert-us = <100000>;
             reset-deassert-us = <100000>;
-            phy-mode = "2500base-x";
         };
 
-        switch@0 {
+        switch0: switch@0 {
             compatible = "mediatek,mt7531";
             reg = <31>;
             reset-gpios = <&pio 5 0>;
@@ -209,7 +203,6 @@
 
                 port@6 {
                     reg = <6>;
-                    label = "cpu";
                     ethernet = <&gmac0>;
                     phy-mode = "2500base-x";
 
@@ -231,8 +224,9 @@
     reset-names = "mtketh";
     status = "okay";
     mtketh-wan = "eth1";
-    mtketh-lan = "lan";
+    mtketh-lan = "eth0";
     mtketh-max-gmac = <2>;
+    mtketh-ppe = "eth0";
 };
 
 &spi1 {
