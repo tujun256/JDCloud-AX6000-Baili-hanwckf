@@ -11,11 +11,11 @@
 # for file in $(find ./feeds/mtk_openwrt_feed/21.02/patches-feeds -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
 
 # pwd
-# cp ${GITHUB_WORKSPACE}/JDCloud-AX6000-Baili/mt7986a-jdcloud-re-cp-03.dts ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
+cp ${GITHUB_WORKSPACE}/JDCloud-AX6000-Baili/mt7986a-jdcloud-re-cp-03.dts ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
 
-# cp ${GITHUB_WORKSPACE}/JDCloud-AX6000-Baili/mt7986a-glinet-gl-mt6000.dts ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
+cp ${GITHUB_WORKSPACE}/JDCloud-AX6000-Baili/mt7986a-glinet-gl-mt6000.dts ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-glinet-gl-mt6000.dts
 
-# cp ${GITHUB_WORKSPACE}/JDCloud-AX6000-Baili/mt7986a-emmc-rfb.dts ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-emmc-rfb.dts
+cp ${GITHUB_WORKSPACE}/JDCloud-AX6000-Baili/mt7986a-emmc-rfb.dts ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-emmc-rfb.dts
 
 
 # cat ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7986a-jdcloud-re-cp-03.dts
