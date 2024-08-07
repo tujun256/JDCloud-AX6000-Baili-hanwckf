@@ -25,7 +25,7 @@ cp ${GITHUB_WORKSPACE}/JDCloud-AX6000-Baili/mt7986a-emmc-rfb.dts ${GITHUB_WORKSP
 # sed -i '/jdcloud,re-cp-03)/ {n; s/lan1 lan2 lan3 lan4/lan0 lan1 lan2 lan3 lan4 lan5/}' target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 # cat ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/mt7986/base-files/etc/board.d/02_network
 
-# sed -i 's/MT7986_ePAeLNA_EEPROM_AX6000.bin/MT7986_iPAiLNA_EEPROM_AX6000.bin/g' ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/mt7986/base-files/lib/preinit/90_extract_caldata
+sed -i 's/MT7986_ePAeLNA_EEPROM_AX6000.bin/MT7986_iPAiLNA_EEPROM_AX6000.bin/g' ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/mt7986/base-files/lib/preinit/90_extract_caldata
 # cat ${GITHUB_WORKSPACE}/openwrt/target/linux/mediatek/mt7986/base-files/lib/preinit/90_extract_caldata
 
 exit 0
