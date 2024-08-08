@@ -4,54 +4,27 @@
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/leds/common.h>
+
 / {
 	model = "GL.iNet GL-MT6000";
- 	compatible = "glinet,gl-mt6000","mediatek,mt7986a-emmc-rfb";
-	chosen {
-		bootargs = "console=ttyS0,115200n1 loglevel=8  \
-				earlycon=uart8250,mmio32,0x11002000 debug\
-				root=PARTLABEL=rootfs rootwait";
-	};
-	
+	compatible = "glinet,gl-mt6000", "mediatek,mt7986a";
+
 	aliases {
-		led-boot = &led_status_white;
- 		led-failsafe = &led_status_white;
- 		led-running = &led_status_blue;
- 		led-upgrade = &led_status_blue;
+		serial0 = &uart0;
+		led-boot = &led_blue;
+		led-failsafe = &led_blue;
+		led-running = &led_white;
+		led-upgrade = &led_white;
 	};
 
-	memory {
-		reg = <0 0x40000000 0 0x10000000>;
-	};
-
-	gpio-keys {
- 		compatible = "gpio-keys";
-
- 		button-reset {
- 			label = "reset";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
- 		};
-
- 	};
-	
-	leds {
-		compatible = "gpio-leds";
-
-		led_status_white: status_white {
- 			label = "white:status";
- 			gpios = <&pio 37 GPIO_ACTIVE_LOW>;
- 		};
-
- 		led_status_blue: status_blue {
- 			label = "blue:status";
- 			gpios = <&pio 38 GPIO_ACTIVE_LOW>;
- 		};
+	chosen {
+		stdout-path = "serial0:115200n8";
+		bootargs-append = " root=PARTLABEL=rootfs rootwait";
 	};
 
 	reg_1p8v: regulator-1p8v {
 		compatible = "regulator-fixed";
-		regulator-name = "fixed-1.8V";
+		regulator-name = "1.8vd";
 		regulator-min-microvolt = <1800000>;
 		regulator-max-microvolt = <1800000>;
 		regulator-boot-on;
@@ -67,6 +40,29 @@
 		regulator-always-on;
 	};
 
+	keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			linux,code = <KEY_RESTART>;
+			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led_blue: led@0 {
+			label = "blue:run";
+			gpios = <&pio 38 GPIO_ACTIVE_LOW>;
+		};
+
+		led_white: led@1 {
+			label = "white:system";
+			gpios = <&pio 37 GPIO_ACTIVE_LOW>;
+		};
+	};
 
 	usb_vbus: regulator-usb-vbus {
 		compatible = "regulator-fixed";
@@ -77,27 +73,199 @@
 		enable-active-high;
 		regulator-boot-on;
 	};
+};
 
-	sound {
-		compatible = "mediatek,mt7986-wm8960-machine";
-		mediatek,platform = <&afe>;
-		audio-routing = "Headphone", "HP_L",
-				"Headphone", "HP_R",
-				"LINPUT1", "AMIC",
-				"RINPUT1", "AMIC";
-		mediatek,audio-codec = <&wm8960>;
-		status = "okay";
+&eth {
+	status = "okay";
+
+	gmac0: mac@0 {
+		compatible = "mediatek,eth-mac";
+		reg = <0>;
+		phy-mode = "2500base-x";
+
+		fixed-link {
+			speed = <2500>;
+			full-duplex;
+			pause;
+		};
+	};
+
+	gmac1: mac@1 {
+		compatible = "mediatek,eth-mac";
+		reg = <1>;
+		phy-mode = "2500base-x";
+		phy-handle = <&phy7>;
+	};
+
+	mdio: mdio-bus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		phy7: ethernet-phy@7 {
+			compatible = "ethernet-phy-ieee802.3-c45";
+			reg = <7>;
+			reset-assert-us = <100000>;
+			reset-deassert-us = <100000>;
+			reset-gpios = <&pio 6 GPIO_ACTIVE_LOW>;
+			interrupt-parent = <&pio>;
+			//interrupts = <46 IRQ_TYPE_LEVEL_LOW>;
+			realtek,aldps-enable;
+		};
+
+		phy5: ethernet-phy@5 {
+			compatible = "ethernet-phy-ieee802.3-c45";
+			reg = <5>;
+			reset-assert-us = <100000>;
+			reset-deassert-us = <100000>;
+			reset-gpios = <&pio 48 GPIO_ACTIVE_LOW>;
+			interrupt-parent = <&pio>;
+			//interrupts = <47 IRQ_TYPE_LEVEL_LOW>;
+			realtek,aldps-enable;
+		};
+
+		switch: switch@1f {
+			compatible = "mediatek,mt7531";
+			reg = <31>;
+			reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
+			interrupt-controller;
+			#interrupt-cells = <1>;
+			interrupt-parent = <&pio>;
+			interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
+
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					label = "lan1";
+				};
+
+				port@1 {
+					reg = <1>;
+					label = "lan2";
+				};
+
+				port@2 {
+					reg = <2>;
+					label = "lan3";
+				};
+
+				port@3 {
+					reg = <3>;
+					label = "lan4";
+				};
+
+				port@4 {
+					reg = <4>;
+					label = "lan5";
+				};
+
+				port@5 {
+					reg = <5>;
+					label = "lan6";
+					phy-handle = <&phy5>;
+					phy-mode = "2500base-x";
+				};
+
+				port@6 {
+					reg = <6>;
+					ethernet = <&gmac0>;
+					phy-mode = "2500base-x";
+
+					fixed-link {
+						speed = <2500>;
+						full-duplex;
+						pause;
+					};
+				};
+			};
+		};
 	};
 };
 
-&fan {
-	pwms = <&pwm 1 50000 0>;
-	status = "disabled";
+&pio {
+	wf_2g_5g_pins: wf_2g_5g-pins {
+		mux {
+			function = "wifi";
+			groups = "wf_2g", "wf_5g";
+		};
+		conf {
+			pins = "WF0_HB1", "WF0_HB2", "WF0_HB3", "WF0_HB4",
+			       "WF0_HB0", "WF0_HB0_B", "WF0_HB5", "WF0_HB6",
+			       "WF0_HB7", "WF0_HB8", "WF0_HB9", "WF0_HB10",
+			       "WF0_TOP_CLK", "WF0_TOP_DATA", "WF1_HB1",
+			       "WF1_HB2", "WF1_HB3", "WF1_HB4", "WF1_HB0",
+			       "WF1_HB5", "WF1_HB6", "WF1_HB7", "WF1_HB8",
+			       "WF1_TOP_CLK", "WF1_TOP_DATA";
+			drive-strength = <4>;
+		};
+	};
+
+	mmc0_pins_default: mmc0-pins {
+		mux {
+			function = "emmc";
+			groups = "emmc_51";
+		};
+		conf-cmd-dat {
+			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
+			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
+			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
+			input-enable;
+			drive-strength = <4>;
+			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
+		};
+		conf-clk {
+			pins = "EMMC_CK";
+			drive-strength = <6>;
+			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
+		};
+		conf-ds {
+			pins = "EMMC_DSL";
+			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
+		};
+		conf-rst {
+			pins = "EMMC_RSTB";
+			drive-strength = <4>;
+			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
+		};
+	};
+
+	mmc0_pins_uhs: mmc0-uhs-pins {
+		mux {
+			function = "emmc";
+			groups = "emmc_51";
+		};
+		conf-cmd-dat {
+			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
+			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
+			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
+			input-enable;
+			drive-strength = <4>;
+			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
+		};
+		conf-clk {
+			pins = "EMMC_CK";
+			drive-strength = <6>;
+			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
+		};
+		conf-ds {
+			pins = "EMMC_DSL";
+			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
+		};
+		conf-rst {
+			pins = "EMMC_RSTB";
+			drive-strength = <4>;
+			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
+		};
+	};
 };
 
-&pwm {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pwm0_pin &pwm1_pin_g1>;
+&crypto {
+	status = "okay";
+};
+
+&trng {
 	status = "okay";
 };
 
@@ -105,185 +273,7 @@
 	status = "okay";
 };
 
-&uart1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&uart1_pins>;
-	status = "okay";
-};
-
-&uart2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&uart2_pins>;
-	status = "okay";
-};
-
-&i2c0 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c_pins>;
-	status = "okay";
-
-	wm8960: wm8960@1a {
-		compatible = "wlf,wm8960";
-		reg = <0x1a>;
-	};
-};
-
-&auxadc {
-	status = "okay";
-};
-
 &watchdog {
-	status = "okay";
-};
-
-&eth {
-    compatible = "mediatek,mt7986-eth";
-	// reg = <0x15100000 0x80000>;
-	// interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
-	// 				<GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
-	// clocks = <&topckgen CK_TOP_ETH_SEL>,
-	// 			<&topckgen CK_TOP_F_ETH_50M_SEL>,
-	// 			<&ethsys CK_ETH_FE_EN>,
-	// 			<&ethsys CK_ETH_GP2_EN>,
-	// 			<&ethsys CK_ETH_GP1_EN>,
-	// 			<&ethsys CK_ETH_WOCPU1_EN>,
-	// 			<&ethsys CK_ETH_WOCPU0_EN>,
-	// 			<&sgmiisys0 CK_SGM0_TX_EN>,
-	// 			<&sgmiisys0 CK_SGM0_RX_EN>,
-	// 			<&sgmiisys1 CK_SGM1_TX_EN>,
-	// 			<&sgmiisys1 CK_SGM1_RX_EN>;
-	// clock-names = "eth", "eth_fe", "eth_gp2", "eth_gp1",
-	// 				"eth_wocpu1", "eth_wocpu0",
-	// 				"sgmii_tx250m", "sgmii_rx250m",
-	// 				"sgmii2_tx250m", "sgmii2_rx250m";
-	// assigned-clocks = <&topckgen CK_TOP_NETSYS_SEL>,
-	// 					<&topckgen CK_TOP_NETSYS_500M_SEL>;
-	// assigned-clock-parents = <&topckgen CK_TOP_CB_NET2_800M>,
-	// 							<&topckgen CK_TOP_CB_NET2_500M>;
-	// mediatek,ethsys = <&ethsys>;
-	// mediatek,sgmiisys = <&sgmiisys0>, <&sgmiisys1>;
-	// #reset-cells = <1>;
-	// #address-cells = <1>;
-	// #size-cells = <0>;
-    status = "okay";
-
-    gmac0: mac@0 {
-        compatible = "mediatek,eth-mac";
-        reg = <0>;
-        phy-mode = "2500base-x";
-
-        fixed-link {
-            speed = <2500>;
-            full-duplex;
-            pause;
-        };
-    };
-
-    gmac1: mac@1 {
-        compatible = "mediatek,eth-mac";
-        reg = <1>;
-        phy-mode = "2500base-x";
-        phy-handle = <&phy7>;
-    };
-
-    mdio: mdio-bus {
-        #address-cells = <1>;
-        #size-cells = <0>;
-
-        phy7: ethernet-phy@7 {
-            compatible = "ethernet-phy-ieee802.3-c45";
-            reg = <7>;
-            reset-gpios = <&pio 19 1>;
-            reset-assert-us = <100000>;
-            reset-deassert-us = <100000>;
-            phy-mode = "2500base-x";
-        };
-
-        switch@0 {
-            compatible = "mediatek,mt7531";
-            reg = <31>;
-            reset-gpios = <&pio 5 0>;
-
-            ports {
-                #address-cells = <1>;
-                #size-cells = <0>;
-
-                port@0 {
-                    reg = <0>;
-                    label = "lan1";
-                };
-
-                port@1 {
-                    reg = <1>;
-                    label = "lan2";
-                };
-
-                port@2 {
-                    reg = <2>;
-                    label = "lan3";
-                };
-
-                port@3 {
-                    reg = <3>;
-                    label = "lan4";
-                };
-
-                port@5 {
-                    reg = <5>;
-                    label = "lan5";
-                    phy-mode = "2500base-x";
-
-                    fixed-link {
-                        speed = <2500>;
-                        full-duplex;
-                        pause;
-                    };
-                };
-
-                port@6 {
-                    reg = <6>;
-                    label = "cpu";
-                    ethernet = <&gmac0>;
-                    phy-mode = "2500base-x";
-
-                    fixed-link {
-                        speed = <2500>;
-                        full-duplex;
-                        pause;
-                    };
-                };
-            };
-        };
-    };
-};
-
-&hnat {
-    compatible = "mediatek,mtk-hnat_v4";
-    reg = <0x15100000 0x80000>;
-    resets = <&ethsys 0>;
-    reset-names = "mtketh";
-    status = "okay";
-    mtketh-wan = "eth1";
-    mtketh-lan = "lan";
-    mtketh-max-gmac = <2>;
-};
-
-&xhci {
- 	vusb33-supply = <&reg_3p3v>;
- 	vbus-supply = <&usb_vbus>;
- 	status = "okay";
-};
-
-
-&spi1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&spic_pins_g2>;
 	status = "okay";
 };
 
@@ -303,74 +293,4 @@
 	no-sd;
 	no-sdio;
 	status = "okay";
-};
-
-&pcie0 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pcie0_pins>;
-	status = "okay";
-};
-
-&wbsys {
-	status = "okay";
-};
-
-&pio {
-	mmc0_pins_default: mmc0-pins-50-to-61-default {
-		mux {
-			function = "flash";
-			groups = "emmc_51";
-		};
-		conf-cmd-dat {
-			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
-			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
-			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
-			input-enable;
-			drive-strength = <MTK_DRIVE_4mA>;
-			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
-		};
-		conf-clk {
-			pins = "EMMC_CK";
-			drive-strength = <MTK_DRIVE_6mA>;
-			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
-		};
-		conf-ds {
-			pins = "EMMC_DSL";
-			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
-		};
-		conf-rst {
-			pins = "EMMC_RSTB";
-			drive-strength = <MTK_DRIVE_4mA>;
-			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
-		};
-	};
-
-	mmc0_pins_uhs: mmc0-pins-50-to-61-uhs {
-		mux {
-			function = "flash";
-			groups = "emmc_51";
-		};
-		conf-cmd-dat {
-			pins = "EMMC_DATA_0", "EMMC_DATA_1", "EMMC_DATA_2",
-			       "EMMC_DATA_3", "EMMC_DATA_4", "EMMC_DATA_5",
-			       "EMMC_DATA_6", "EMMC_DATA_7", "EMMC_CMD";
-			input-enable;
-			drive-strength = <MTK_DRIVE_4mA>;
-			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
-		};
-		conf-clk {
-			pins = "EMMC_CK";
-			drive-strength = <MTK_DRIVE_6mA>;
-			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
-		};
-		conf-ds {
-			pins = "EMMC_DSL";
-			mediatek,pull-down-adv = <2>;	/* pull-down 50K */
-		};
-		conf-rst {
-			pins = "EMMC_RSTB";
-			drive-strength = <MTK_DRIVE_4mA>;
-			mediatek,pull-up-adv = <1>;	/* pull-up 10K */
-		};
-	};
 };
