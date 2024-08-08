@@ -98,123 +98,112 @@
 };
 
 &eth {
-    compatible = "mediatek,mt7986-eth";
-    reg = <0x15100000 0x80000>;
-    interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-                 <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-                 <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-                 <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-                 <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
-                 <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
-                 <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
-                 <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
-    clocks = <&topckgen CK_TOP_ETH_SEL>,
-             <&topckgen CK_TOP_F_ETH_50M_SEL>,
-             <&ethsys CK_ETH_FE_EN>,
-             <&ethsys CK_ETH_GP2_EN>,
-             <&ethsys CK_ETH_GP1_EN>,
-             <&ethsys CK_ETH_WOCPU1_EN>,
-             <&ethsys CK_ETH_WOCPU0_EN>,
-             <&sgmiisys0 CK_SGM0_TX_EN>,
-             <&sgmiisys0 CK_SGM0_RX_EN>,
-             <&sgmiisys1 CK_SGM1_TX_EN>,
-             <&sgmiisys1 CK_SGM1_RX_EN>;
-    clock-names = "eth", "eth_fe", "eth_gp2", "eth_gp1",
-                  "eth_wocpu1", "eth_wocpu0",
-                  "sgmii_tx250m", "sgmii_rx250m",
-                  "sgmii2_tx250m", "sgmii2_rx250m";
-    assigned-clocks = <&topckgen CK_TOP_NETSYS_SEL>,
-                      <&topckgen CK_TOP_NETSYS_500M_SEL>;
-    assigned-clock-parents = <&topckgen CK_TOP_CB_NET2_800M>,
-                             <&topckgen CK_TOP_CB_NET2_500M>;
-    mediatek,ethsys = <&ethsys>;
-    mediatek,sgmiisys = <&sgmiisys0>, <&sgmiisys1>;
-    #reset-cells = <1>;
-    #address-cells = <1>;
-    #size-cells = <0>;
-    status = "okay";
+	status = "okay";
 
-    gmac0: mac@0 {
-        compatible = "mediatek,eth-mac";
-        reg = <0>;
-        phy-mode = "2500base-x";
-        phy-handle = <&switch0>;
-    };
+	gmac0: mac@0 {
+		compatible = "mediatek,eth-mac";
+		reg = <0>;
+		phy-mode = "2500base-x";
 
-    gmac1: mac@1 {
-        compatible = "mediatek,eth-mac";
-        reg = <1>;
-        phy-mode = "2500base-x";
-        phy-handle = <&phy7>;
-    };
+		fixed-link {
+			speed = <2500>;
+			full-duplex;
+			pause;
+		};
+	};
 
-    mdio: mdio-bus {
-        #address-cells = <1>;
-        #size-cells = <0>;
+	gmac1: mac@1 {
+		compatible = "mediatek,eth-mac";
+		reg = <1>;
+		phy-mode = "2500base-x";
+		phy-handle = <&phy7>;
+	};
 
-        phy7: ethernet-phy@7 {
-            compatible = "ethernet-phy-ieee802.3-c45";
-            reg = <7>;
-            reset-gpios = <&pio 19 1>;
-            reset-assert-us = <100000>;
-            reset-deassert-us = <100000>;
-        };
+	mdio: mdio-bus {
+		#address-cells = <1>;
+		#size-cells = <0>;
 
-        switch0: switch@0 {
-            compatible = "mediatek,mt7531";
-            reg = <31>;
-            reset-gpios = <&pio 5 0>;
+		phy7: ethernet-phy@7 {
+			compatible = "ethernet-phy-ieee802.3-c45";
+			reg = <7>;
+			reset-assert-us = <100000>;
+			reset-deassert-us = <100000>;
+			reset-gpios = <&pio 6 GPIO_ACTIVE_LOW>;
+			interrupt-parent = <&pio>;
+			//interrupts = <46 IRQ_TYPE_LEVEL_LOW>;
+			realtek,aldps-enable;
+		};
 
-            ports {
-                #address-cells = <1>;
-                #size-cells = <0>;
+		phy5: ethernet-phy@5 {
+			compatible = "ethernet-phy-ieee802.3-c45";
+			reg = <5>;
+			reset-assert-us = <100000>;
+			reset-deassert-us = <100000>;
+			reset-gpios = <&pio 48 GPIO_ACTIVE_LOW>;
+			interrupt-parent = <&pio>;
+			//interrupts = <47 IRQ_TYPE_LEVEL_LOW>;
+			realtek,aldps-enable;
+		};
 
-                port@0 {
-                    reg = <0>;
-                    label = "lan1";
-                };
+		switch: switch@1f {
+			compatible = "mediatek,mt7531";
+			reg = <31>;
+			reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
+			interrupt-controller;
+			#interrupt-cells = <1>;
+			interrupt-parent = <&pio>;
+			interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
 
-                port@1 {
-                    reg = <1>;
-                    label = "lan2";
-                };
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
 
-                port@2 {
-                    reg = <2>;
-                    label = "lan3";
-                };
+				port@0 {
+					reg = <0>;
+					label = "lan1";
+				};
 
-                port@3 {
-                    reg = <3>;
-                    label = "lan4";
-                };
+				port@1 {
+					reg = <1>;
+					label = "lan2";
+				};
 
-                port@5 {
-                    reg = <5>;
-                    label = "lan5";
-                    phy-mode = "2500base-x";
+				port@2 {
+					reg = <2>;
+					label = "lan3";
+				};
 
-                    fixed-link {
-                        speed = <2500>;
-                        full-duplex;
-                        pause;
-                    };
-                };
+				port@3 {
+					reg = <3>;
+					label = "lan4";
+				};
 
-                port@6 {
-                    reg = <6>;
-                    ethernet = <&gmac0>;
-                    phy-mode = "2500base-x";
+				port@4 {
+					reg = <4>;
+					label = "lan5";
+				};
 
-                    fixed-link {
-                        speed = <2500>;
-                        full-duplex;
-                        pause;
-                    };
-                };
-            };
-        };
-    };
+				port@5 {
+					reg = <5>;
+					label = "lan6";
+					phy-handle = <&phy5>;
+					phy-mode = "2500base-x";
+				};
+
+				port@6 {
+					reg = <6>;
+					ethernet = <&gmac0>;
+					phy-mode = "2500base-x";
+
+					fixed-link {
+						speed = <2500>;
+						full-duplex;
+						pause;
+					};
+				};
+			};
+		};
+	};
 };
 
 &hnat {
